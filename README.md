@@ -10,23 +10,27 @@
 - Version: 1.9.11（该版本和xray版本一致，不兼容老版本）
 
 ## 选择xray文件
-![img.png](img.png)
+<img src="/PNG/png1.png" alt="image" style="width:500px;height:400px;">
 
 ## 主动扫描
 
 输入url后点击开启主动扫描，扫完后可以点击查看扫描结果。比命令行模式方便一点
+![img.png](/PNG/png2.png)
 
 ## 被动扫描
 输入ip，端口，开启被动扫描
-
+![img.png](/PNG/png3.png)
 
 ## 高级设置
-
+![img.png](/PNG/png4.png)
 
 ## 编写poc
 点击后跳转到[https://poc.xray.cool/](https://poc.xray.cool/)
+![img.png](/PNG/png5.png)
+
 
 ## 加解密
+![img.png](/PNG/png6.png)
 输入自动加密，解密的md5是通过内置的表来实现的。
 
 
