@@ -126,7 +126,7 @@ class BOX1(QWidget,Ui_Form):
         self.textEdit.clear()
         self.process_kill()
         if not hasattr(self, 'is_first_click'):
-            
+            self.dict['name'] = str(int(time.time()))
             self.is_first_click = True
             self.process_kill()
             with open('xray_address.yaml', 'r', encoding='utf-8') as file:
@@ -177,7 +177,7 @@ class BOX1(QWidget,Ui_Form):
         self.textEdit.clear()
         self.process_kill()
         if not hasattr(self, 'is_first_clicks'):
-            
+            self.dict['name'] = str(int(time.time()))
             self.is_first_clicks = True
             with open('xray_address.yaml', 'r', encoding='utf-8') as file:
                 yaml = ruamel.yaml.YAML()
