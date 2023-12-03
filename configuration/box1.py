@@ -239,6 +239,18 @@ class BOX1(QWidget,Ui_Form):
             
             self.process_creation()
             self.process.start(fileName)
+        if not os.path.exists('config.yaml'):
+            self.process.finished.connect(self.xray_start)
+
+
+    def xray_start(self):
+        self.textEdit.clear()
+        self.process_kill()
+        with open('xray_address.yaml', 'r', encoding='utf-8') as file:
+            yaml = ruamel.yaml.YAML()
+            config = yaml.load(file)
+            self.process_creation()
+            self.process.start(config['xray_address'])
 
     
     def xray_version(self):
