@@ -239,8 +239,8 @@ class BOX1(QWidget,Ui_Form):
             
             self.process_creation()
             self.process.start(fileName)
-        if not os.path.exists('config.yaml'):
-            self.process.finished.connect(self.xray_start)
+            if not os.path.exists('config.yaml'):
+                self.process.finished.connect(self.xray_start)
 
 
     def xray_start(self):
