@@ -54,16 +54,21 @@ class BOX1(QWidget,Ui_Form):
 
     
     def basics_save(self):
-        with open('config.yaml', 'r', encoding='utf-8') as file:
-            yaml = ruamel.yaml.YAML()
-            config = yaml.load(file)
-            config['parallel'] = int(self.spinBox.text())
-            config['http']['dial_timeout'] = int(self.spinBox_2.text())
-            config['http']['max_redirect'] = int(self.spinBox_3.text())
-            config['http']['max_qps'] = int(self.spinBox_4.text())
-        with open('config.yaml', 'w', encoding='utf-8') as file:
-            yaml.dump(config, file)
-        self.open_tishiwindow(None, None)
+        if os.path.exists('xray_address.yaml'):
+            with open('config.yaml', 'r', encoding='utf-8') as file:
+                yaml = ruamel.yaml.YAML()
+                config = yaml.load(file)
+                config['parallel'] = int(self.spinBox.text())
+                config['http']['dial_timeout'] = int(self.spinBox_2.text())
+                config['http']['max_redirect'] = int(self.spinBox_3.text())
+                config['http']['max_qps'] = int(self.spinBox_4.text())
+            with open('config.yaml', 'w', encoding='utf-8') as file:
+                yaml.dump(config, file)
+            self.open_tishiwindow(None, None)
+        else:
+            text = '未配置xray文件'
+            img = './img/失败.png'
+            self.open_tishiwindow(text, img)
 
 
     
@@ -123,99 +128,109 @@ class BOX1(QWidget,Ui_Form):
 
     
     def initiative_scan(self):
-        self.textEdit.clear()
-        self.process_kill()
-        if not hasattr(self, 'is_first_click'):
-            self.dict['name'] = str(int(time.time()))
-            self.is_first_click = True
-            self.process_kill()
-            with open('xray_address.yaml', 'r', encoding='utf-8') as file:
-                yaml = ruamel.yaml.YAML()
-                config = yaml.load(file)
-                self.args = config['xray_address']
-                if self.radioButton_5.isChecked():
-                    self.args = self.args + ' --log-level debug'
-                if self.radioButton_6.isChecked():
-                    self.args = self.args + ' --log-level info'
-                if self.radioButton_7.isChecked():
-                    self.args = self.args + ' --log-level warn'
-                if self.radioButton_8.isChecked():
-                    self.args = self.args + ' --log-level error'
-                if self.radioButton_9.isChecked():
-                    self.args = self.args + ' --log-level fatal'
-                self.args = self.args + ' webscan'
-                if self.radioButton_11.isChecked():
-                    self.args = self.args + ' --level medium'
-                if self.radioButton_12.isChecked():
-                    self.args = self.args + ' --level high'
-                if self.radioButton_13.isChecked():
-                    self.args = self.args + ' --level critical'
-                if self.dict['url']:
-                    self.args = self.args + ' --url ' + self.dict['url']
-                if self.dict['request']:
-                    self.args = self.args + ' --raw-request ' + self.dict['request']
-                if self.dict['url_list']:
-                    self.args = self.args + ' --url-file ' + self.dict['url_list']
-                if self.radioButton.isChecked():
-                    self.args = self.args + ' --html-output ' + self.dict['name'] + '.html'
-                    self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/' + self.dict['name'] + '.html'
-                if self.radioButton_2.isChecked():
-                    self.args = self.args + ' --json-output ' + self.dict['name'] + '.txt'
-                    self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/'  + self.dict['name'] + '.txt'
-            self.pushButton_3.setText("关闭主动扫描")
-            self.process_creation()
-            self.process.start(self.args)
-        else:
-            
-            del self.is_first_click  
-            self.pushButton_3.setText("开启主动扫描")
+        if os.path.exists('xray_address.yaml'):
             self.textEdit.clear()
             self.process_kill()
+            if not hasattr(self, 'is_first_click'):
+                
+                self.is_first_click = True
+                self.process_kill()
+                with open('xray_address.yaml', 'r', encoding='utf-8') as file:
+                    yaml = ruamel.yaml.YAML()
+                    config = yaml.load(file)
+                    self.args = config['xray_address']
+                    if self.radioButton_5.isChecked():
+                        self.args = self.args + ' --log-level debug'
+                    if self.radioButton_6.isChecked():
+                        self.args = self.args + ' --log-level info'
+                    if self.radioButton_7.isChecked():
+                        self.args = self.args + ' --log-level warn'
+                    if self.radioButton_8.isChecked():
+                        self.args = self.args + ' --log-level error'
+                    if self.radioButton_9.isChecked():
+                        self.args = self.args + ' --log-level fatal'
+                    self.args = self.args + ' webscan'
+                    if self.radioButton_11.isChecked():
+                        self.args = self.args + ' --level medium'
+                    if self.radioButton_12.isChecked():
+                        self.args = self.args + ' --level high'
+                    if self.radioButton_13.isChecked():
+                        self.args = self.args + ' --level critical'
+                    if self.dict['url']:
+                        self.args = self.args + ' --url ' + self.dict['url']
+                    if self.dict['request']:
+                        self.args = self.args + ' --raw-request ' + self.dict['request']
+                    if self.dict['url_list']:
+                        self.args = self.args + ' --url-file ' + self.dict['url_list']
+                    if self.radioButton.isChecked():
+                        self.args = self.args + ' --html-output ' + self.dict['name'] + '.html'
+                        self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/' + self.dict['name'] + '.html'
+                    if self.radioButton_2.isChecked():
+                        self.args = self.args + ' --json-output ' + self.dict['name'] + '.txt'
+                        self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/'  + self.dict['name'] + '.txt'
+                self.pushButton_3.setText("关闭主动扫描")
+                self.process_creation()
+                self.process.start(self.args)
+            else:
+                
+                del self.is_first_click  
+                self.pushButton_3.setText("开启主动扫描")
+                self.textEdit.clear()
+                self.process_kill()
+        else:
+            text = '未配置xray文件'
+            img = './img/失败.png'
+            self.open_tishiwindow(text, img)
 
     
     def passive_scan(self):
-        self.textEdit.clear()
-        self.process_kill()
-        if not hasattr(self, 'is_first_clicks'):
-            self.dict['name'] = str(int(time.time()))
-            self.is_first_clicks = True
-            with open('xray_address.yaml', 'r', encoding='utf-8') as file:
-                yaml = ruamel.yaml.YAML()
-                config = yaml.load(file)
-                self.args = config['xray_address']
-                if self.radioButton_5.isChecked():
-                    self.args = self.args + ' --log-level debug'
-                if self.radioButton_6.isChecked():
-                    self.args = self.args + ' --log-level info'
-                if self.radioButton_7.isChecked():
-                    self.args = self.args + ' --log-level warn'
-                if self.radioButton_8.isChecked():
-                    self.args = self.args + ' --log-level error'
-                if self.radioButton_9.isChecked():
-                    self.args = self.args + ' --log-level fatal'
-                self.args = self.args + ' webscan'
-                if self.radioButton_11.isChecked():
-                    self.args = self.args + ' --level medium'
-                if self.radioButton_12.isChecked():
-                    self.args = self.args + ' --level high'
-                if self.radioButton_13.isChecked():
-                    self.args = self.args + ' --level critical'
-                if self.radioButton.isChecked():
-                    self.args = self.args + ' --html-output ' + self.dict['name'] + '.html '
-                    self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/' + self.dict['name'] + '.html'
-                if self.radioButton_2.isChecked():
-                    self.args = self.args + ' --json-output ' + self.dict['name'] + '.txt '
-                    self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/' + self.dict['name'] + '.txt'
-                self.args = self.args + '--listen ' + self.lineEdit_6.text() + ':' + self.lineEdit_7.text()
-            self.pushButton_4.setText("关闭被动扫描")
-            self.process_creation()
-            self.process.start(self.args)
-        else:
-            
-            del self.is_first_clicks  
-            self.pushButton_4.setText("开启被动扫描")
+        if os.path.exists('xray_address.yaml'):
             self.textEdit.clear()
             self.process_kill()
+            if not hasattr(self, 'is_first_clicks'):
+                
+                self.is_first_clicks = True
+                with open('xray_address.yaml', 'r', encoding='utf-8') as file:
+                    yaml = ruamel.yaml.YAML()
+                    config = yaml.load(file)
+                    self.args = config['xray_address']
+                    if self.radioButton_5.isChecked():
+                        self.args = self.args + ' --log-level debug'
+                    if self.radioButton_6.isChecked():
+                        self.args = self.args + ' --log-level info'
+                    if self.radioButton_7.isChecked():
+                        self.args = self.args + ' --log-level warn'
+                    if self.radioButton_8.isChecked():
+                        self.args = self.args + ' --log-level error'
+                    if self.radioButton_9.isChecked():
+                        self.args = self.args + ' --log-level fatal'
+                    self.args = self.args + ' webscan'
+                    if self.radioButton_11.isChecked():
+                        self.args = self.args + ' --level medium'
+                    if self.radioButton_12.isChecked():
+                        self.args = self.args + ' --level high'
+                    if self.radioButton_13.isChecked():
+                        self.args = self.args + ' --level critical'
+                    if self.radioButton.isChecked():
+                        self.args = self.args + ' --html-output ' + self.dict['name'] + '.html '
+                        self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/' + self.dict['name'] + '.html'
+                    if self.radioButton_2.isChecked():
+                        self.args = self.args + ' --json-output ' + self.dict['name'] + '.txt '
+                        self.dict['name_all'] = os.path.dirname(config['xray_address']) + '/' + self.dict['name'] + '.txt'
+                    self.args = self.args + '--listen ' + self.lineEdit_6.text() + ':' + self.lineEdit_7.text()
+                self.pushButton_4.setText("关闭被动扫描")
+                self.process_creation()
+                self.process.start(self.args)
+            else:
+                
+                del self.is_first_clicks  
+                self.pushButton_4.setText("开启被动扫描")
+                self.textEdit.clear()
+                self.process_kill()
+        else:
+            text = '未配置xray文件'
+            img = './img/失败.png'
+            self.open_tishiwindow(text, img)
 
     
     def command_look(self):
@@ -232,6 +247,8 @@ class BOX1(QWidget,Ui_Form):
     def xray_file(self):
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件", os.getcwd(), "All Files(*.exe);")
         self.lineEdit.setText(fileName)
+        self.textEdit.clear()
+        self.process_kill()
         if fileName:
             with open('xray_address.yaml', 'w', encoding='utf-8') as file:
                 yaml = ruamel.yaml.YAML()
@@ -252,15 +269,23 @@ class BOX1(QWidget,Ui_Form):
             self.process_creation()
             self.process.start(config['xray_address'])
 
+
+
     
     def xray_version(self):
-        self.textEdit.clear()
-        self.process_kill()
-        with open('xray_address.yaml', 'r', encoding='utf-8') as file:
-            yaml = ruamel.yaml.YAML()
-            config = yaml.load(file)
-            self.process_creation()
-            self.process.start(config['xray_address'])
+        if os.path.exists('xray_address.yaml'):
+            self.textEdit.clear()
+            self.process_kill()
+            with open('xray_address.yaml', 'r', encoding='utf-8') as file:
+                yaml = ruamel.yaml.YAML()
+                config = yaml.load(file)
+                self.process_creation()
+                self.process.start(config['xray_address'])
+        else:
+            text = '未配置xray文件'
+            img = './img/失败.png'
+            self.open_tishiwindow(text, img)
+
 
     
     def process_creation(self):
@@ -302,6 +327,7 @@ class BOX1(QWidget,Ui_Form):
         self.pushButton_3.setText("开启主动扫描")
         self.pushButton_4.setText("开启被动扫描")
 
+    
     def open_subwindow(self):
         if os.path.exists('config.yaml'):
             self.config_window = config.config_win()
