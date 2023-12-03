@@ -8,6 +8,7 @@
 目前该工具是用命令行来实现扫描，为了方便快捷配置config.yaml文件以及帮助新人快速入手而写的GUI界面。
 - 目前版本
 - Version: 1.9.11（该版本和xray版本一致，不兼容老版本）
+- 后面搞一下xpoc
 
 ## 选择xray文件
 <img src="/PNG/png1.png" alt="image" style="width:700px;height:700px;">
