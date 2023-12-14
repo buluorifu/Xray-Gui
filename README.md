@@ -2,9 +2,6 @@
 
 该项目参考了[super-xray](https://github.com/4ra1n/super-xray)
 
-## 目录
-- **1、[介绍](#1、介绍)**
-
 ## 介绍
 [xray](https://github.com/chaitin/xray) 是长亭科技研发的 一款功能强大的安全评估工具，由多名经验丰富的一线安全从业者呕心打造而成。
 
