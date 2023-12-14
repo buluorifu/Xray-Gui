@@ -2,6 +2,9 @@
 
 该项目参考了[super-xray](https://github.com/4ra1n/super-xray)
 
+## 目录
+- **1、[介绍](#1、介绍)**
+
 ## 介绍
 [xray](https://github.com/chaitin/xray) 是长亭科技研发的 一款功能强大的安全评估工具，由多名经验丰富的一线安全从业者呕心打造而成。
 
@@ -9,7 +12,6 @@
 - 目前版本
 - Version: 1.9.11（该版本使用xray 1.9.11和rad 1.0，不兼容老版本）
 - 使用时把xray和rad放在Xray-Gui.exe同目录下
-  
 
 ## 选择xray文件
 <img src="/PNG/png1.png" alt="image" style="width:700px;height:700px;">
