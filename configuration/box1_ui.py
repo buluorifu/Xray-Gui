@@ -257,6 +257,7 @@ class Ui_Form(object):
         self.label_9.setText(_translate("Form", "被动监听IP"))
         self.lineEdit_6.setText(_translate("Form", "127.0.0.1"))
         self.label_10.setText(_translate("Form", "被动监听端口"))
+        self.lineEdit_7.setText(_translate("Form", "7777"))
         self.pushButton_4.setText(_translate("Form", "开启被动扫描"))
         self.groupBox_3.setTitle(_translate("Form", "log level"))
         self.radioButton_4.setText(_translate("Form", "null"))
