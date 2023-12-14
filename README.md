@@ -30,7 +30,25 @@
 点击后跳转到[https://poc.xray.cool/](https://poc.xray.cool/)
 <img src="/PNG/png5.png" alt="image" style="width:700px;height:700px;">
 
+## rad界面
+<img src="/PNG/png7.png" alt="image" style="width:700px;height:700px;">
 
+## 查看rad_config文件
+可以在配置文件里面修改后保存
+<img src="/PNG/png8.png" alt="image" style="width:700px;height:700px;">
+
+## rad主动扫描
+输入url后点击自动扫描
+<img src="/PNG/png9.png" alt="image" style="width:700px;height:700px;">
+
+## rad需要手动登录的情况
+输入url后勾选，点击主动扫描，弹出谷歌浏览器窗口，登入后点击确定
+<img src="/PNG/png10.png" alt="image" style="width:700px;height:700px;">
+
+## 与xray联动
+在xray界面点击被动扫描后，再在rad界面输入目标url然后点击被动扫描
+<img src="/PNG/png11.png" alt="image" style="width:700px;height:700px;">
+<img src="/PNG/png12.png" alt="image" style="width:700px;height:700px;">
 ## 加解密
 输入自动加密，解密的md5是通过内置的表来实现的。
 <img src="/PNG/png6.png" alt="image" style="width:700px;height:700px;">
