@@ -28,16 +28,26 @@ class MyWindow(QWidget,Ui_Form):
         self.pushButton.clicked.connect(self.btn_press1_clicked)
         self.pushButton_2.clicked.connect(self.btn_press2_clicked)
         self.pushButton_3.clicked.connect(self.btn_press3_clicked)
+# 设置按钮1的初始样式
+        self.pushButton.setStyleSheet("background-color: #CAE1FF;")
 
     def btn_press1_clicked(self):
-        # 设置抽屉布局器的当前索引值，即可切换显示哪个Widget
         self.qsl.setCurrentIndex(0)
+        self.pushButton.setStyleSheet("background-color: #CAE1FF;")
+        self.pushButton_2.setStyleSheet("")  # 恢复按钮2的默认样式
+        self.pushButton_3.setStyleSheet("")  # 恢复按钮3的默认样式
 
     def btn_press2_clicked(self):
         self.qsl.setCurrentIndex(1)
+        self.pushButton.setStyleSheet("")  # 恢复按钮1的默认样式
+        self.pushButton_2.setStyleSheet("background-color: #CAE1FF;")
+        self.pushButton_3.setStyleSheet("")  # 恢复按钮3的默认样式
 
     def btn_press3_clicked(self):
         self.qsl.setCurrentIndex(2)
+        self.pushButton.setStyleSheet("")  # 恢复按钮1的默认样式
+        self.pushButton_2.setStyleSheet("")  # 恢复按钮2的默认样式
+        self.pushButton_3.setStyleSheet("background-color: #CAE1FF;")
 
     def closeEvent(self, event):
         # 关闭其他窗口的代码
