@@ -10,6 +10,10 @@
 - Version: 1.9.11（该版本使用xray 1.9.11和rad 1.0，不兼容老版本）
 - 使用时把xray和rad放在Xray-Gui.exe同目录下
 
+## xray和rad下载地址
+- [xray](https://github.com/chaitin/xray/releases/tag/1.9.11)
+- [rad](https://github.com/chaitin/rad/releases/tag/1.0)
+
 ## 选择xray文件
 <img src="/PNG/png1.png" alt="image" style="width:700px;height:700px;">
 
