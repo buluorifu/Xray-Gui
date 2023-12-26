@@ -1,6 +1,7 @@
 import base64
 import binascii
 import hashlib
+import threading
 import urllib.parse
 from PyQt5.QtWidgets import QWidget
 from .box3_ui import Ui_Form
@@ -16,9 +17,12 @@ class BOX3(QWidget,Ui_Form):
         self.pushButton.clicked.connect(self.toggle_1)
         self.pushButton_2.clicked.connect(self.toggle_2)
         self.textEdit.textChanged.connect(self.encrypt_txt)
+        self.pushButton.setStyleSheet("background-color: #bbeeb9;")
 
     def toggle_1(self):
         if self.connection_state == False:
+            self.pushButton.setStyleSheet("background-color: #bbeeb9;")
+            self.pushButton_2.setStyleSheet("")
             self.textEdit.textChanged.disconnect(self.decode_txt)
             self.textEdit.textChanged.connect(self.encrypt_txt)
             self.connection_state = True
@@ -26,10 +30,22 @@ class BOX3(QWidget,Ui_Form):
 
     def toggle_2(self):
         if self.connection_state == True:
+            self.pushButton.setStyleSheet("")
+            self.pushButton_2.setStyleSheet("background-color: #bbeeb9;")
             self.textEdit.textChanged.disconnect(self.encrypt_txt)
             self.textEdit.textChanged.connect(self.decode_txt)
             self.connection_state = False
             self.decode_txt()
+
+    def start_encrypt_txt(self):
+        t = threading.Thread(target=self.encrypt_txt)
+        t.daemon = True
+        t.start()
+
+    def start_decode_txt(self):
+        t = threading.Thread(target=self.decode_txt)
+        t.daemon = True
+        t.start()
 
     def encrypt_txt(self):
         str_txt = self.textEdit.toPlainText()
