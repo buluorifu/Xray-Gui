@@ -1,4 +1,5 @@
 import os
+import re
 import time
 from PyQt5.QtGui import QIcon
 from . import config
@@ -12,7 +13,7 @@ from .box1_ui import Ui_Form
 class BOX1(QWidget,Ui_Form):
     def __init__(self):
         super(QWidget, self).__init__()
-        self.setupUi(self)  
+        self.setupUi(self)  # 使用 sjui.Ui_Form 类中的方法初始化 UI
         self.init_ui()
         self.config_window = None
         self.process = None
@@ -22,21 +23,21 @@ class BOX1(QWidget,Ui_Form):
     def init_ui(self):
         self.initial()
         self.pushButton_8.clicked.connect(self.open_subwindow)
-        self.toolButton.clicked.connect(self.xray_file)         
-        self.pushButton.clicked.connect(self.basics_save)       
-        self.pushButton_6.clicked.connect(self.clear_cmd)       
-        self.pushButton_5.clicked.connect(self.xray_version)    
-        self.pushButton_2.clicked.connect(self.name_save)       
-        self.lineEdit_3.textChanged.connect(self.url_save)      
-        self.toolButton_2.clicked.connect(self.request_body)    
-        self.toolButton_3.clicked.connect(self.url_list_save)   
-        self.pushButton_3.clicked.connect(self.initiative_scan) 
-        self.pushButton_4.clicked.connect(self.passive_scan)    
-        self.pushButton_9.clicked.connect(self.file_look)       
-        self.pushButton_10.clicked.connect(self.command_look)   
-        self.pushButton_7.clicked.connect(self.poc_start)       
+        self.toolButton.clicked.connect(self.xray_file)         # 读取xray文件
+        self.pushButton.clicked.connect(self.basics_save)       # 确认修改基础配置
+        self.pushButton_6.clicked.connect(self.clear_cmd)       # 清空命令行输出
+        self.pushButton_5.clicked.connect(self.xray_version)    # 查看xray版本
+        self.pushButton_2.clicked.connect(self.name_save)       # 生成word名字
+        self.lineEdit_3.textChanged.connect(self.url_save)      # 输入url保存
+        self.toolButton_2.clicked.connect(self.request_body)    # 选取request文件保存
+        self.toolButton_3.clicked.connect(self.url_list_save)   # 选取url_list文件保存
+        self.pushButton_3.clicked.connect(self.initiative_scan) # 开启主动扫描
+        self.pushButton_4.clicked.connect(self.passive_scan)    # 开启被动扫描
+        self.pushButton_9.clicked.connect(self.file_look)       # 查看扫描结果
+        self.pushButton_10.clicked.connect(self.command_look)   # 查看当前命令
+        self.pushButton_7.clicked.connect(self.poc_start)       # 访问编写poc网址
 
-    
+    # 加载上一次选项
     def initial(self):
         if os.path.exists('config.yaml'):
             with open('config.yaml', 'r', encoding='utf-8') as file:
@@ -52,7 +53,7 @@ class BOX1(QWidget,Ui_Form):
                 config = yaml.load(file)
                 self.lineEdit.setText(config['xray_address'])
 
-    
+    # 确认修改基础配置
     def basics_save(self):
         if os.path.exists('file_address.yaml'):
             with open('config.yaml', 'r', encoding='utf-8') as file:
@@ -71,7 +72,7 @@ class BOX1(QWidget,Ui_Form):
             self.open_tishiwindow(text, img)
 
 
-    
+    # 生成word名字
     def name_save(self):
         if self.lineEdit_2.text() == "" or self.lineEdit_2.text() == "默认则随机命名":
             self.dict['name'] = str(int(time.time()))
@@ -79,12 +80,12 @@ class BOX1(QWidget,Ui_Form):
             self.dict['name'] = self.lineEdit_2.text()
         self.open_tishiwindow(None, None)
 
-    
+    # 访问编写poc网址
     def poc_start(self):
         url = QtCore.QUrl('https://poc.xray.cool/')
         QtGui.QDesktopServices.openUrl(url)
 
-    
+    # 输入url保存
     def url_save(self):
         self.dict['url']=self.lineEdit_3.text()
         self.dict['request']=''
@@ -92,7 +93,7 @@ class BOX1(QWidget,Ui_Form):
         self.lineEdit_4.setText('')
         self.lineEdit_5.setText('')
 
-    
+    # 选取request文件保存
     def request_body(self):
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件", os.getcwd(), "All Files(*);")
         self.dict['url'] = ''
@@ -102,7 +103,7 @@ class BOX1(QWidget,Ui_Form):
         self.lineEdit_4.setText(fileName)
         self.lineEdit_5.setText('')
 
-    
+    # 选取url_list文件保存
     def url_list_save(self):
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件", os.getcwd(), "All Files(*);")
         self.dict['url'] = ''
@@ -112,7 +113,7 @@ class BOX1(QWidget,Ui_Form):
         self.lineEdit_4.setText('')
         self.lineEdit_5.setText(fileName)
 
-    
+    # 查看扫描结果
     def file_look(self):
         try:
             if self.dict['name_all']:
@@ -126,7 +127,7 @@ class BOX1(QWidget,Ui_Form):
                 img = './img/失败.png'
                 self.open_tishiwindow(text, img)
 
-    
+    # 开启主动扫描
     def initiative_scan(self):
         if os.path.exists('file_address.yaml'):
             self.textEdit.clear()
@@ -136,7 +137,7 @@ class BOX1(QWidget,Ui_Form):
                     self.dict['name'] = str(int(time.time()))
                 else:
                     self.dict['name'] = self.lineEdit_2.text()
-                
+                # 第一次按下按钮
                 self.is_first_click = True
                 self.process_kill()
                 with open('file_address.yaml', 'r', encoding='utf-8') as file:
@@ -176,8 +177,8 @@ class BOX1(QWidget,Ui_Form):
                 self.process_creation()
                 self.process.start(self.args)
             else:
-                
-                del self.is_first_click  
+                # 第二次按下按钮
+                del self.is_first_click  # 删除标记
                 self.pushButton_3.setText("开启主动扫描")
                 self.textEdit.clear()
                 self.process_kill()
@@ -186,7 +187,7 @@ class BOX1(QWidget,Ui_Form):
             img = './img/失败.png'
             self.open_tishiwindow(text, img)
 
-    
+    # 开启被动扫描
     def passive_scan(self):
         if os.path.exists('file_address.yaml'):
             self.textEdit.clear()
@@ -196,7 +197,7 @@ class BOX1(QWidget,Ui_Form):
                     self.dict['name'] = str(int(time.time()))
                 else:
                     self.dict['name'] = self.lineEdit_2.text()
-                
+                # 第一次按下按钮
                 self.is_first_clicks = True
                 with open('file_address.yaml', 'r', encoding='utf-8') as file:
                     yaml = ruamel.yaml.YAML()
@@ -230,8 +231,8 @@ class BOX1(QWidget,Ui_Form):
                 self.process_creation()
                 self.process.start(self.args)
             else:
-                
-                del self.is_first_clicks  
+                # 第二次按下按钮
+                del self.is_first_clicks  # 删除标记
                 self.pushButton_4.setText("开启被动扫描")
                 self.textEdit.clear()
                 self.process_kill()
@@ -240,7 +241,7 @@ class BOX1(QWidget,Ui_Form):
             img = './img/失败.png'
             self.open_tishiwindow(text, img)
 
-    
+    # 查看当前命令
     def command_look(self):
         if self.args:
             self.args = self.args.replace('--', '\n--')
@@ -251,7 +252,7 @@ class BOX1(QWidget,Ui_Form):
             img = './img/失败.png'
             self.open_tishiwindow(text, img)
 
-    
+    # 配置xray文件
     def xray_file(self):
         fileName, fileType = QtWidgets.QFileDialog.getOpenFileName(None, "选取文件", os.getcwd(), "All Files(*.exe);")
         self.lineEdit.setText(fileName)
@@ -274,7 +275,7 @@ class BOX1(QWidget,Ui_Form):
                     yaml.dump({'rad_address': None}, file)
                 self.process_creation()
                 self.process.start(fileName)
-        
+        # 判断是否有xray的config文件，没有则生成
         if not os.path.exists('config.yaml'):
             self.process.finished.connect(self.xray_start)
 
@@ -290,7 +291,7 @@ class BOX1(QWidget,Ui_Form):
 
 
 
-    
+    # 查看xray版本
     def xray_version(self):
         if os.path.exists('file_address.yaml'):
             self.textEdit.clear()
@@ -306,36 +307,62 @@ class BOX1(QWidget,Ui_Form):
             self.open_tishiwindow(text, img)
 
 
-    
+    # 创建cmd进程
     def process_creation(self):
         self.process = QProcess()
         self.process.setProcessChannelMode(QProcess.MergedChannels)
         self.process.readyReadStandardOutput.connect(self.handle_output)
         self.process.finished.connect(self.handle_finished)
 
-    
+    # 命令输出
     def handle_output(self):
         try:
-            data = self.process.readAll().data().decode('utf-8').rstrip()
-            
-            self.textEdit.append(data)
+            data = self.process.readAll().data().decode('utf-8').strip()
+            lines = data.split('\n')
+            for line in lines:
+                if "[INFO]" in line:
+                    line = line.replace("[INFO]", f'<span style="color: blue;">[INFO]</span>')
+                elif "[Vuln: dirscan]" in line:
+                    line = line.replace("[Vuln: dirscan]", f'<span style="color: red;">[Vuln: dirscan]</span>')
+                elif line.startswith('\t'):
+                    line = f'<span style="color: purple;">&nbsp;&nbsp;&nbsp;&nbsp;{line}</span>'
+                elif re.match(r'^[\u4e00-\u9fff]', line):
+                    line = f'<span style="color: red;">{line}</span>'
+                elif "requestSent" in line:
+                    line = f'<span style="color: #FFBF00;">{line}</span>'
+                elif "All pending" in line:
+                    line = f'<span style="color: #00FF7F;">{line}</span>'
+                self.textEdit.append(line)
         except:
-            data = self.process.readAll().data().decode('latin-1').rstrip()
-            
-            self.textEdit.append(data)
+            data = self.process.readAll().data().decode('latin-1').strip()
+            lines = data.split('\n')
+            for line in lines:
+                if "[INFO]" in line:
+                    line = line.replace("[INFO]", f'<span style="color: blue;">[INFO]</span>')
+                elif "[Vuln: dirscan]" in line:
+                    line = line.replace("[Vuln: dirscan]", f'<span style="color: red;">[Vuln: dirscan]</span>')
+                elif line.startswith('\t'):
+                    line = f'<span style="color: purple;">&nbsp;&nbsp;&nbsp;&nbsp;{line}</span>'
+                elif re.match(r'^[\u4e00-\u9fff]', line):
+                    line = f'<span style="color: red;">{line}</span>'
+                elif "requestSent" in line:
+                    line = f'<span style="color: #FFBF00;">{line}</span>'
+                elif "All pending" in line:
+                    line = f'<span style="color: #00FF7F;">{line}</span>'
+                self.textEdit.append(line)
 
-    
+    # 当进程完成时，该方法会被调用。删除对象QProcess
     def handle_finished(self):
         self.process.deleteLater()
         self.process = None
 
-    
+    # 关闭进程
     def process_kill(self):
         if self.process is not None and self.process.state() == QProcess.Running:
             self.process.kill()
-            self.process.waitForFinished()  
+            self.process.waitForFinished()  # 等待进程完全结束
 
-    
+    # 清空命令行输出
     def clear_cmd(self):
         self.textEdit.clear()
         self.process_kill()
@@ -346,7 +373,7 @@ class BOX1(QWidget,Ui_Form):
         self.pushButton_3.setText("开启主动扫描")
         self.pushButton_4.setText("开启被动扫描")
 
-    
+    # 打开高级设置窗口
     def open_subwindow(self):
         if os.path.exists('config.yaml'):
             self.config_window = config.config_win()
@@ -358,7 +385,7 @@ class BOX1(QWidget,Ui_Form):
             img = './img/失败.png'
             self.open_tishiwindow(text, img)
 
-    
+    # 消息弹窗
     def open_tishiwindow(self,text,img):
         self.tishi_window = tishi.TiShi()
         icon = QIcon('img/扫描.png')
@@ -367,7 +394,7 @@ class BOX1(QWidget,Ui_Form):
             self.tishi_window.label.setText(text)
         if img:
             self.tishi_window.label_2.setPixmap(QtGui.QPixmap(img))
-        self.tishi_window.setWindowModality(Qt.ApplicationModal)  
+        self.tishi_window.setWindowModality(Qt.ApplicationModal)  # 设置子窗口为应用程序模态
         self.tishi_window.show()
 
 
